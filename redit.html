@@ -19,8 +19,14 @@
 		  <div class="row">
 			  <div class="col-xs-1 col-sm-1"></div>  
 			  <div class="col-xs-10 col-sm-10">
-				  <div class="panel panel-default">
-					  <div class="panel-heading">System Operation</div>
+				  <div class="panel panel-default" id="loading">
+					  <div class="panel-heading">0Mu Markdown Blog Editor</div>
+					  <div class="panel-body">
+						  <h1> 正在從Git確認更新，載入您的部落格內容</h1>
+					  </div>
+				  </div>
+				  <div class="panel panel-default" id="load">
+					  <div class="panel-heading">0Mu Markdown Blog Editor</div>
 					  <div class="panel-body">
 						  <form class="createtable">
 							  <input class="form-control" type="text" name="username" size="20" placeholder="username"><br>
@@ -64,10 +70,13 @@ date:      <!-- 請輸入你發文的日  -->
 	  </script>
 	  <script>
 		  $(document).ready(function(){
+			  $("#load").hide();
 			  $.ajax({
 				  type: "POST",
 				  url: "/cgi-bin/blogget",
-				  success: function(){ alert("已推送最新板的blog到本地");},
+				  success: function(){ $("#loading").hide();
+					  $("#load").show();
+				  },
 				  error: function(){ alert("failure");}
 	  
 			  });
