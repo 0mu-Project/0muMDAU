@@ -4,15 +4,14 @@
 import web
 import os 
 import hashlib
+import git 
 
 urls = (
-        
-"/cgi-bin/save", "ClassSave"
-"/cgi-bin/gitpush" , "ClassGitPush"
+        "/cgi-bin/save", "ClassSave" ,
+        "/cgi-bin/blogget", "ClassLoad"
 
 ) 
 
-app = web.application(urls, globals())  
 
 class ClassSave:
     def POST(self):
@@ -35,11 +34,22 @@ class ClassSave:
                     ans ="eat shit"
         else:
             ans = "eat shit"
-            return pathuser 
+        
+        return pathuser 
 
-class ClassGitPush:
-    a = "test"
+class ClassLoad:
+    def POST(self):
+        blogpath = "./blog"
+        if os.path.exists(blogpath) == True:
+            g = git.cmd.Git(blogpath)
+            g.pull()
+        else:
+            git.Git().clone("https://github.com/0mu-Project/blog.git")
+        
+        return blogpath
+
 
 
 if __name__ == "__main__":  
-        app.run()  
+    app = web.application(urls, globals())
+    app.run()  

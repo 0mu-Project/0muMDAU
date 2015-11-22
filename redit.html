@@ -62,14 +62,26 @@ date:      <!-- 請輸入你發文的日  -->
 
 		  $("textarea.content").markdown({autofocus:true , savable:true , })
 	  </script>
+	  <script>
+		  $(document).ready(function(){
+			  $.ajax({
+				  type: "POST",
+				  url: "/cgi-bin/blogget",
+				  success: function(){ alert("已推送最新板的blog到本地");},
+				  error: function(){ alert("failure");}
 	  
+			  });
+		  });
+
+
+		  </script>	  
 
 <script>
 	$(function() {
 		$("button#submit").click(function(){
 		   	$.ajax({
 		 		type: "POST",
-		 		url: "/cgi-bin/create",
+		 		url: "/cgi-bin/save",
 		 		data: $('form').serialize(),
 		 		success: function(){ window.location.reload(true); },
 				error: function(){ alert("failure");} 
