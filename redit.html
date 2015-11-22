@@ -69,7 +69,7 @@ date:      <!-- 請輸入你發文的日  -->
 		$("button#submit").click(function(){
 		   	$.ajax({
 		 		type: "POST",
-		 		url: "/cgi-bin/create.py",
+		 		url: "/cgi-bin/create",
 		 		data: $('form').serialize(),
 		 		success: function(){ window.location.reload(true); },
 				error: function(){ alert("failure");} 
