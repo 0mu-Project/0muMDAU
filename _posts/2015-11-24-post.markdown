@@ -1,7 +1,7 @@
 l---
 layout: post
 title:  "" 
-date: 
+date: post
 categories: jekyll update 
 ---
 <!--
