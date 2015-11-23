@@ -15,36 +15,42 @@ urls = (
 ) 
 class ClassSubmit:
     def POST(self):
+        web.header('Content-Type', 'text')
         form = web.input()
         argment = form.get('content')
-        filen = form.get('title')
-        user = form.get('username')
-        passd = form.get('password')
-        pathuser = "../pskey/" + user
-        hashsha =  hashlib.sha256(passd.replace('\n','').encode())
-        if os.path.exists(pathuser) == True :
-            with open( pathuser ,'r' ) as f:
-                fline = f.readline()
-                if fline.replace('\n' , '')  == hashsha.hexdigest() :
-                    f = open('_posted/'+ filen  +'.markdown', 'w') 
-                    f.write(argment.encode('UTF-8'))
-                    f.close()
-                    ans = "file open"
-                    import shutil
-                    shutil.copyfile('_posted/' + filen +'.markdown','blog/_posts/' + filen +'.markdown')
-                    repo = git.Repo("./blog")
-                    index = repo.index
-                    index.add(["_posts"])
-                    message = 'add new posts' + filen
-                    index.commit(message)
-                    subprocess.call(['bash ./script/autoAuth.sh ' + user + ' ' + passd + ' ./blog'], shell=True)
-
-                else:
-                    ans ="eat shit"
+        fil = form.get('title')
+        import datetime
+        now = datetime.datetime.now()
+        filen = now.strftime("%Y-%m-%d")+"-"+fil 
+        if not fil.strip():
+            return "打檔名拉,e04"
         else:
-            ans = "eat shit"
+            user = form.get('username')
+            passd = form.get('password')
+            pathuser = "../pskey/" + user
+            hashsha =  hashlib.sha256(passd.replace('\n','').encode())
+            if os.path.exists(pathuser) == True :
+                with open( pathuser ,'r' ) as f:
+                    fline = f.readline()
+                    if fline.replace('\n' , '')  == hashsha.hexdigest() :
+                        f = open('_posted/'+ filen  +'.markdown', 'w') 
+                        f.write(argment.encode('UTF-8'))
+                        f.close()
+                        ans = "file open"
+                        import shutil
+                        shutil.copyfile('_posted/' + filen +'.markdown','blog/_posts/' + filen +'.markdown')
+                        repo = git.Repo("./blog")
+                        index = repo.index
+                        index.add(["_posts"])
+                        message = 'add new posts' + filen
+                        index.commit(message)
+                        subprocess.call(['bash ./script/autoAuth.sh ' + user + ' ' + passd + ' ./blog'], shell=True)
+                        return "文章已經存在本地的_posted,文章即將發布.." 
+                    else:
+                        return "密碼錯誤是要登入三小"
+            else:
+                return "帳號錯誤是要登入三小"
         
-        return pathuser 
 
 
 class ClassMD:
@@ -55,27 +61,22 @@ class ClassMD:
 
 class ClassSave:
     def POST(self):
+        web.header('Content-Type', 'text')
         form = web.input()
         argment = form.get('content')
-        filen = form.get('title')
-        user = form.get('username')
-        passd = form.get('password')
-        pathuser = "../pskey/" + user
-        hashsha =  hashlib.sha256(passd.replace('\n','').encode())
-        if os.path.exists(pathuser) == True :
-            with open( pathuser ,'r' ) as f:
-                fline = f.readline()
-                if fline.replace('\n' , '')  == hashsha.hexdigest() :
-                    f = open('_posts/'+ filen  +'.markdown', 'w') 
-                    f.write(argment.encode('UTF-8'))
-                    f.close()
-                    ans = "file open"
-                else:
-                    ans ="eat shit"
+        fil = form.get('title')
+        import datetime
+        now = datetime.datetime.now()
+        filen = now.strftime("%Y-%m-%d")+"-"+fil
+
+        if not fil.strip():
+            return "打標題啦,e04!"
         else:
-            ans = "eat shit"
-        
-        return pathuser 
+            f = open('_posts/'+ filen  +'.markdown', 'w') 
+            f.write(argment.encode('UTF-8'))
+            f.close()
+            ans = "file open"
+            return "文章已經存在本地的_posts,重新整理即可在佇列中看到"
 
 class ClassLoad:
     def POST(self):
@@ -97,11 +98,14 @@ class ClassJson:
                 if os.path.isfile(os.path.join(directory, f)):
                     i = i + 1
                     data.insert(i,f)
+                    import json
+                    web.header('Content-Type', 'application/json')
+                    return json.dumps(data,separators=( ',' , ':'))
                 else:
                     data1 = "False"
-                import json 
-        web.header('Content-Type', 'application/json')
-        return json.dumps(data,separators=( ',' , ':'))
+                    
+        else:
+            os.makefirs(postpath)
 
 if __name__ == "__main__":  
     app = web.application(urls, globals())
