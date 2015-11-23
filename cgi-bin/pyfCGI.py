@@ -7,12 +7,35 @@ import hashlib
 import git 
 
 urls = (
+        "/cgi-bin/login", "ClassLogin",
         "/cgi-bin/save", "ClassSave" ,
         "/cgi-bin/blogget", "ClassLoad",
         "/cgi-bin/jsonlist" , "ClassJson",
         "/cgi-bin/getmd/(.+)" , "ClassMD",
         "/cgi-bin/submit" , "ClassSubmit"
-) 
+)
+app = web.application(urls, globals())
+session = web.session.Session(app,web.session.DiskStore('sessions'),initializer={'login':0,' username' : ''})
+web.config.debug = False
+
+class ClassLogin:
+    def POST(self):
+        form = web.input()
+        user = form.get('buser')
+        passd = form.get('bpass')
+        pathuser = "../pskey/" + user
+        hashsha =  hashlib.sha256(passd.replace('\n','').encode())
+        if os.path.exists(pathuser) == True :
+            with open( pathuser ,'r' ) as f:
+                fline = f.readline()
+                if fline.replace('\n' , '')  == hashsha.hexdigest() :
+                    web.setcookie('login','login_cookie',60)
+                    session._initializer['login'] = 1
+                    session._initializer['username'] = user 
+                    print("posted")
+                    print(session._initializer['login'])
+                    print(session._initializer['username'])
+    
 class ClassSubmit:
     def POST(self):
         web.header('Content-Type', 'text')
@@ -61,7 +84,6 @@ class ClassMD:
 
 class ClassSave:
     def POST(self):
-        web.header('Content-Type', 'text')
         form = web.input()
         argment = form.get('content')
         fil = form.get('title')
@@ -80,12 +102,22 @@ class ClassSave:
 
 class ClassLoad:
     def POST(self):
+        web.header('Content-Type', 'text')
         blogpath = "./blog"
         if os.path.exists(blogpath) == True:
             g = git.cmd.Git(blogpath)
             g.pull()
         else:
             git.Git().clone("https://github.com/0mu-Project/blog.git")
+
+        print(session._initializer['login'])
+        if session._initializer['login'] == 1:
+            print("test")
+            return "login"
+        else:
+            return "nlogin"
+
+
 
 class ClassJson:
     def GET(self):
@@ -105,8 +137,10 @@ class ClassJson:
                     data1 = "False"
                     
         else:
-            os.makefirs(postpath)
+            os.makedirs(postpath)
+
+
+
 
 if __name__ == "__main__":  
-    app = web.application(urls, globals())
     app.run()  
