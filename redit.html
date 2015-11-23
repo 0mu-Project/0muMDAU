@@ -168,6 +168,7 @@ categories: jekyll update
 					  val = "'" + value + "'"
 					  var myRow = '<tr><td>'+number + '</td><td><a href="javascript:showmd('+ val + ')"> '+ value +'</a></td></tr>';
 					  number = number +1;
+					  $("#marktitle tr:last").after(myRow); 
 
 				  })
 			  });

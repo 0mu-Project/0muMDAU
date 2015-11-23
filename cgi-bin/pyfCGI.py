@@ -15,7 +15,7 @@ urls = (
         "/cgi-bin/submit" , "ClassSubmit"
 )
 app = web.application(urls, globals())
-session = web.session.Session(app,web.session.DiskStore('sessions'),initializer={'login':0,' username' : ''})
+session = web.session.Session(app,web.session.DiskStore('../sessions'),initializer={'login':0,' username' : ''})
 web.config.debug = False
 
 class ClassLogin:
