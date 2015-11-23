@@ -9,8 +9,15 @@ import git
 urls = (
         "/cgi-bin/save", "ClassSave" ,
         "/cgi-bin/blogget", "ClassLoad",
-        "/cgi-bin/jsonlist" , "ClassJson"
+        "/cgi-bin/jsonlist" , "ClassJson",
+        "/cgi-bin/getmd/(.+)" , "ClassMD"
 ) 
+class ClassMD:
+    def POST(self,name):
+        f = open('./_posts/'+ name)
+        
+        return f.read()
+
 
 
 class ClassSave:

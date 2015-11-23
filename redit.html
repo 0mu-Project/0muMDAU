@@ -85,6 +85,23 @@ date:      <!-- 請輸入你發文的日  -->
 
 		  $("textarea.content").markdown({autofocus:true})
 	  </script>
+
+		  <script>
+			   function showmd(url) {
+				   alert(url);
+				   $.ajax({
+				   
+					   type : "POST",
+					   url : "/cgi-bin/getmd/" + url ,
+					   dataType: "text",
+					   success: function(data) {
+						   $("textarea.content").data('markdown').setContent(data);
+					   }
+
+				   });
+			   }
+
+		 </script>
 	  <script>
 		  $(document).ready(function(){
 			  $("#load").hide();
@@ -101,17 +118,15 @@ date:      <!-- 請輸入你發文的日  -->
 				  var number =1;
 				  $.each(data, function (index, value){
 					  console.log(value);
-					  var myRow = "<tr><td>"+number + "</td><td>" + value + "</td></tr>";
+					  val = "'" + value + "'"
+					  var myRow = '<tr><td>'+number + '</td><td><a href="javascript:showmd('+ val + ')"> '+ value +'</a></td></tr>';
 					  number = number +1;
-					  $("#marktitle tr:last").after(myRow);
+					  $("#marktitle tr:last").after(myRow); 
+
 				  })
-			  
 			  });
 		  });
-
-
 		  </script>	  
-
 <script>
 	$(function() {
 		$("button#save").click(function(){
