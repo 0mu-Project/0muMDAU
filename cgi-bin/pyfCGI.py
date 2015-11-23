@@ -8,8 +8,8 @@ import git
 
 urls = (
         "/cgi-bin/save", "ClassSave" ,
-        "/cgi-bin/blogget", "ClassLoad"
-
+        "/cgi-bin/blogget", "ClassLoad",
+        "/cgi-bin/jsonlist" , "ClassJson"
 ) 
 
 
@@ -45,10 +45,23 @@ class ClassLoad:
             g.pull()
         else:
             git.Git().clone("https://github.com/0mu-Project/blog.git")
-        
-        return blogpath
 
-
+class ClassJson:
+    def GET(self):
+        postpath = "./_posts"
+        if os.path.exists(postpath) == True:
+            directory = os.path.expanduser(postpath)
+            data = []
+            i = 0
+            for f in os.listdir(directory):
+                if os.path.isfile(os.path.join(directory, f)):
+                    i = i + 1
+                    data.insert(i,f)
+                else:
+                    data1 = "False"
+                import json 
+        web.header('Content-Type', 'application/json')
+        return json.dumps(data,separators=( ',' , ':'))
 
 if __name__ == "__main__":  
     app = web.application(urls, globals())

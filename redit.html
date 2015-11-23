@@ -22,15 +22,25 @@
 				  <div class="panel panel-default" id="loading">
 					  <div class="panel-heading">0Mu Markdown Blog Editor</div>
 					  <div class="panel-body">
-						  <h1> 正在從Git確認更新，載入您的部落格內容</h1>
+						  <h1>正在從您設定的github repo抓取是否有新的更新</h1>
+						  </br>
+						  <h3>假如您是第一次進入本後台，系統會自動抓取repo到 ./blog 位置</h3>
+							  <h3>請稍後...正在載入 Markdown Editor !</h3>
+							  <h3>請不要離開本頁面 謝謝！</h3>
 					  </div>
 				  </div>
 				  <div class="panel panel-default" id="load">
 					  <div class="panel-heading">0Mu Markdown Blog Editor</div>
 					  <div class="panel-body">
 						  <form class="createtable">
-							  <input class="form-control" type="text" name="username" size="20" placeholder="username"><br>
-							  <input class="form-control" type="password" name="password" size="20" placeholder="password"><BR>
+							  <div class="input-group">
+								    <span class="input-group-addon" id="basic-addon3">Github 帳號</span>
+									<input class="form-control" type="text" name="username" size="20" placeholder="請輸入使用者名稱而非信箱"><br>
+								</div></br>
+								<div class="input-group">
+									  <span class="input-group-addon" id="basic-addon3">Github 密碼</span>
+									  <input class="form-control" type="password" name="password" size="20" placeholder="請輸入您Github的密碼"><br>
+								  </div></br>
 							  <input class="form-control" name="title" type="text" placeholder="請輸入檔案名稱 限制英文"/></br>
 						  	  <textarea class="content" name="content" data-provide="markdown" rows="20">---
 layout: post
@@ -40,19 +50,26 @@ date:      <!-- 請輸入你發文的日  -->
 <!-- 內文  -->
 								</textarea> 
 								<hr/>
-						   	</form>
-							<label class="checkbox">
-								<input name="publish" type="checkbox"> Publish
-						   	</label>
+							</form>
+							<div class="btn-group pull-right" role="group" aria-label="Submit Option">
+								<button type="submit" id="save" class="btn btn-success">
+									<span class="glyphicon glyphicon-saved" aria-hidden="true"></span>
+									只儲存在本地</button>
+								<button type="submit" id="submit" class="btn btn-warning">
+									<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+									直接發表此文
+								 </button>
+							</div>
+
 						   	<div class="form-group">
 					  		</div>
 					  	</div>
-					  	<table class="table">
-
+						<table id="marktitle" class="table">
+							<tr>
+								<th>佇列</th>
+								<th>檔案名稱</th>	
+							</tr>
 					  	</table>
-					  	<div class="panel-body">
-							<button type="submit" id="submit" class="btn btn-default pull-right">Submit</button>
-					  	</div>
 					</div>
 				</div>
 			</div>
@@ -66,7 +83,7 @@ date:      <!-- 請輸入你發文的日  -->
   <script src="//rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js"></script>
   <script>
 
-		  $("textarea.content").markdown({autofocus:true , savable:true , })
+		  $("textarea.content").markdown({autofocus:true})
 	  </script>
 	  <script>
 		  $(document).ready(function(){
@@ -78,7 +95,17 @@ date:      <!-- 請輸入你發文的日  -->
 					  $("#load").show();
 				  },
 				  error: function(){ alert("failure");}
-	  
+			  });
+			  $.getJSON("/cgi-bin/jsonlist" , function ( data ) {
+				  console.log( data );
+				  var number =1;
+				  $.each(data, function (index, value){
+					  console.log(value);
+					  var myRow = "<tr><td>"+number + "</td><td>" + value + "</td></tr>";
+					  number = number +1;
+					  $("#marktitle tr:last").after(myRow);
+				  })
+			  
 			  });
 		  });
 
@@ -87,12 +114,14 @@ date:      <!-- 請輸入你發文的日  -->
 
 <script>
 	$(function() {
-		$("button#submit").click(function(){
+		$("button#save").click(function(){
 		   	$.ajax({
 		 		type: "POST",
 		 		url: "/cgi-bin/save",
 		 		data: $('form').serialize(),
-		 		success: function(){ window.location.reload(true); },
+				success: function(){ 
+					alert("文章已經存在本地的./_posts");
+					window.location.reload(true); },
 				error: function(){ alert("failure");} 
 			});
 		});
