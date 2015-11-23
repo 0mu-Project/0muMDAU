@@ -41,12 +41,20 @@
 									  <span class="input-group-addon" id="basic-addon3">Github 密碼</span>
 									  <input class="form-control" type="password" name="password" size="20" placeholder="請輸入您Github的密碼"><br>
 								  </div></br>
-							  <input class="form-control" name="title" type="text" placeholder="請輸入檔案名稱 限制英文"/></br>
+							  <input class="form-control" name="title" type="text" placeholder="20xx-xx-xx-title <-格式 不可中文 不可空白"/></br>
 						  	  <textarea class="content" name="content" data-provide="markdown" rows="20">---
 layout: post
-title:  "" <!-- 請輸入你要的標頭  -->
-date:      <!-- 請輸入你發文的日  -->
+title:  "" 
+date: 
+categories: jekyll update 
 ---
+<!--
+請依照以下格式填寫上面的發文標注
+layout: post
+title:  "你要的標題"
+date:   20xx-xx-xx xx:xx:xx +0800
+categories: jekyll update
+-->
 <!-- 內文  -->
 								</textarea> 
 								<hr/>
@@ -136,6 +144,21 @@ date:      <!-- 請輸入你發文的日  -->
 		 		data: $('form').serialize(),
 				success: function(){ 
 					alert("文章已經存在本地的./_posts");
+					window.location.reload(true); },
+				error: function(){ alert("failure");} 
+			});
+		});
+	});
+</script>
+<script>
+	$(function() {
+		$("button#submit").click(function(){
+		   	$.ajax({
+		 		type: "POST",
+		 		url: "/cgi-bin/submit",
+		 		data: $('form').serialize(),
+				success: function(){ 
+					alert("文章已經存在本地的./_posted並請將自動發送到github");
 					window.location.reload(true); },
 				error: function(){ alert("failure");} 
 			});

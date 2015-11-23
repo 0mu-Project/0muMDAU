@@ -1,6 +1,6 @@
 #!/usr/bin/python2.7
 # -*- coding: utf-8 -*-  
-
+import subprocess
 import web
 import os 
 import hashlib
@@ -10,15 +10,48 @@ urls = (
         "/cgi-bin/save", "ClassSave" ,
         "/cgi-bin/blogget", "ClassLoad",
         "/cgi-bin/jsonlist" , "ClassJson",
-        "/cgi-bin/getmd/(.+)" , "ClassMD"
+        "/cgi-bin/getmd/(.+)" , "ClassMD",
+        "/cgi-bin/submit" , "ClassSubmit"
 ) 
+class ClassSubmit:
+    def POST(self):
+        form = web.input()
+        argment = form.get('content')
+        filen = form.get('title')
+        user = form.get('username')
+        passd = form.get('password')
+        pathuser = "../pskey/" + user
+        hashsha =  hashlib.sha256(passd.replace('\n','').encode())
+        if os.path.exists(pathuser) == True :
+            with open( pathuser ,'r' ) as f:
+                fline = f.readline()
+                if fline.replace('\n' , '')  == hashsha.hexdigest() :
+                    f = open('_posted/'+ filen  +'.markdown', 'w') 
+                    f.write(argment.encode('UTF-8'))
+                    f.close()
+                    ans = "file open"
+                    import shutil
+                    shutil.copyfile('_posted/' + filen +'.markdown','blog/_posts/' + filen +'.markdown')
+                    repo = git.Repo("./blog")
+                    index = repo.index
+                    index.add(["_posts"])
+                    message = 'add new posts' + filen
+                    index.commit(message)
+                    subprocess.call(['bash ./script/autoAuth.sh ' + user + ' ' + passd + ' ./blog'], shell=True)
+
+                else:
+                    ans ="eat shit"
+        else:
+            ans = "eat shit"
+        
+        return pathuser 
+
+
 class ClassMD:
     def POST(self,name):
         f = open('./_posts/'+ name)
         
         return f.read()
-
-
 
 class ClassSave:
     def POST(self):
