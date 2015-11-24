@@ -6,10 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta name="description" content="Bootstrap-markdown : Bootstrap plugin for markdown editing" />
 
-    <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap-markdown.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-    <link rel="shortcut icon" href="img/favicon.png">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/bootstrap-markdown.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 
     <title>Reimu Markdown</title>
   </head>
@@ -19,47 +18,6 @@
 		  <div class="row">
 			  <div class="col-xs-1 col-sm-1"></div>  
 			  <div class="col-xs-10 col-sm-10">
-				  <div class="panel panel-default" id="loading">
-					  <div class="panel-heading">0Mu Markdown Blog Editor</div>
-					  <div class="panel-body">
-						  <img style="display:block; margin:auto;" src="img/pullw.jpg" width="70%" height"70%"></img>
-						  </br>
-						  <h2>正在從您設定的github repo抓取是否有新的更新</h2>
-						  </br>
-						  <p>假如您是第一次進入本後台，系統會自動抓取repo到 ./blog 位置</p>
-							  <p>請稍後...正在載入 Markdown Editor !</p>
-							  <p>請不要離開本頁面 謝謝！</p>
-					  </div>
-				  </div>
-				  <div class="panel panel-default" id="logging">
-					  <div class="panel-heading">0Mu Markdown Blog Editor</div>
-					  <div class="panel-body"> 
-						  <img style="display:block; margin:auto;" src="img/bg.jpg"></img>
-						  <form id="bck" class="createtable">
-							  </br>
-							  <div class="input-group">
-								  <span class="input-group-addon" id="basic-addon3">後台帳號（預設是github使用者名稱）</span>
-									<input class="form-control" type="text" name="buser" size="20" placeholder="請輸入使用者名稱而非信箱"><br>
-								</div></br>
-								<div class="input-group">
-									  <span class="input-group-addon" id="basic-addon3">後台密碼（預設是github密碼）</span>
-									  <input class="form-control" type="password" name="bpass" size="20" placeholder="請輸入您Github的密碼"><br>
-								  </div>
-						  </form>
-								  </br>
-								  </hr>
-							<div class="btn-group pull-right" role="group" aria-label="login Option">
-								<button type="submit" id="login" class="btn btn-success">
-									<span class="glyphicon glyphicon-saved" aria-hidden="true"></span>
-									登入系統</button>
-								<button type="submit" id="contact" class="btn btn-warning">
-									<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-									聯絡管理員
-								 </button>
-							 </div>
-						</div>
-					</div>
-
 				  <div class="panel panel-default" id="load">
 					  <div class="panel-heading">0Mu Markdown Blog Editor</div>
 					  <div class="panel-body">
@@ -129,12 +87,12 @@ categories: jekyll update
 			</div>
 		   	<div class="col-xs-1 col-sm-1"></div>
 		</div>
-  <script src="//google-code-prettify.googlecode.com/svn/loader/run_prettify.js"type="text/javascript"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-  <script src="js/markdown.js"></script>
-  <script src="js/bootstrap-markdown.js"></script>
-  <script src="//rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js"></script>
+  <script src="http://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"type="text/javascript"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+  <script src="/static/js/markdown.js"></script>
+  <script src="/static/js/bootstrap-markdown.js"></script>
+  <script src="http://rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js"></script>
   <script>
 
 		  $("textarea.content").markdown({autofocus:true})
@@ -145,7 +103,7 @@ categories: jekyll update
 				   $.ajax({
 				   
 					   type : "POST",
-					   url : "/cgi-bin/getmdposted/" + url ,
+					   url : "/getmdposted/" + url ,
 					   dataType: "text",
 					   success: function(data) {
 						   var title = url.split(".",1);
@@ -164,7 +122,7 @@ categories: jekyll update
 				   $.ajax({
 				   
 					   type : "POST",
-					   url : "/cgi-bin/getmd/" + url ,
+					   url : "/getmd/" + url ,
 					   dataType: "text",
 					   success: function(data) {
 						   var title = url.split(".",1);
@@ -180,29 +138,7 @@ categories: jekyll update
 		 </script>
 	  <script>
 		  $(document).ready(function(){
-			  $("#load").hide();
-			  $("#logging").hide();
-			  $.ajax({
-				  type: "POST",
-				  url: "/cgi-bin/blogget",
-				  dataType: "text",
-			 	  success: function( data ){ 
-					  $("#loading").hide();
-						  if (data == "login")
-						  {
-							  $("#load").show();
-							  $("#fc-inp").val("");
-						  }
-						  else
-						  {
-
-							  $("#logging").show();
-
-						  }
-			 	  },
-				  error: function(){ alert("failure");}
-			  });
-			  $.getJSON("/cgi-bin/jsonlist/posts" , function ( data ) {
+			  $.getJSON("/jsonlist/posts" , function ( data ) {
 				  console.log( data );
 				  var number =1;
 				  $.each(data, function (index, value){
@@ -215,7 +151,7 @@ categories: jekyll update
 				  })
 			  });
 
-			  $.getJSON("/cgi-bin/jsonlist/posted" , function ( data ) {
+			  $.getJSON("/jsonlist/posted" , function ( data ) {
 				  console.log( data );
 				  var number =1;
 				  $.each(data, function (index, value){
@@ -234,7 +170,7 @@ categories: jekyll update
 		$("button#save").click(function(){
 				$.ajax({
 		 			type: "POST",
-		 			url: "/cgi-bin/save",
+		 			url: "/save",
 					data: $('#form').serialize(),
 					datatype: "text",
 					success: function( data ){ 
