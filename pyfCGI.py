@@ -28,7 +28,7 @@ render = render_jinja(
         )
 class ClassRaise:
     def GET(self):
-        if session.loggin == True:
+        if session.get("loggin") is not None:
             print(session.loggin)
             return render.redit()
 
