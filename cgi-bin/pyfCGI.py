@@ -10,8 +10,9 @@ urls = (
         "/cgi-bin/login", "ClassLogin",
         "/cgi-bin/save", "ClassSave" ,
         "/cgi-bin/blogget", "ClassLoad",
-        "/cgi-bin/jsonlist" , "ClassJson",
+        "/cgi-bin/jsonlist/(.+)" , "ClassJson",
         "/cgi-bin/getmd/(.+)" , "ClassMD",
+        "/cgi-bin/getmdposted/(.+)", "ClassMDP",
         "/cgi-bin/submit" , "ClassSubmit"
 )
 app = web.application(urls, globals())
@@ -82,6 +83,11 @@ class ClassMD:
         
         return f.read()
 
+class ClassMDP:
+    def POST(self,name):
+        f = open('./blog/_posts/'+ name)
+        
+        return f.read()
 class ClassSave:
     def POST(self):
         form = web.input()
@@ -120,8 +126,12 @@ class ClassLoad:
 
 
 class ClassJson:
-    def GET(self):
-        postpath = "./_posts"
+    def GET(self,name):
+        if name == "posts" :
+            postpath = "./_posts"
+        else:
+            postpath = "./blog/_posts"
+
         if os.path.exists(postpath) == True:
             directory = os.path.expanduser(postpath)
             data = []
@@ -138,6 +148,7 @@ class ClassJson:
                     
         else:
             os.makedirs(postpath)
+
 
 
 

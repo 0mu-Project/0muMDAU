@@ -102,13 +102,28 @@ categories: jekyll update
 
 						   	<div class="form-group">
 					  		</div>
-					  	</div>
+						</div>
+						<ul class="nav nav-tabs">
+							  <li class="active"><a data-toggle="tab" href="#posts">尚未發布</a></li>
+							    <li><a data-toggle="tab" href="#posted">已經發布</a></li>
+						</ul>
+						<div class="tab-content">
+						<div id="posts" class="tab-pane fade in active">	
 						<table id="marktitle" class="table">
 							<tr>
 								<th>佇列</th>
 								<th>檔案名稱</th>	
 							</tr>
-					  	</table>
+						</table>
+						</div>
+						<div id="posted" class="tab-pane fade">	
+						<table id="markedtitle" class="table">
+							<tr>
+								<th>佇列</th>
+								<th>檔案名稱</th>	
+							</tr>
+						</table>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -125,6 +140,22 @@ categories: jekyll update
 		  $("textarea.content").markdown({autofocus:true})
 	  </script>
 
+		  <script>
+			   function showmdposted(url) {
+				   alert(url);
+				   $.ajax({
+				   
+					   type : "POST",
+					   url : "/cgi-bin/getmdposted/" + url ,
+					   dataType: "text",
+					   success: function(data) {
+						   $("textarea.content").data('markdown').setContent(data);
+					   }
+
+				   });
+			   }
+
+		 </script>
 		  <script>
 			   function showmd(url) {
 				   alert(url);
@@ -164,7 +195,7 @@ categories: jekyll update
 			 	  },
 				  error: function(){ alert("failure");}
 			  });
-			  $.getJSON("/cgi-bin/jsonlist" , function ( data ) {
+			  $.getJSON("/cgi-bin/jsonlist/posts" , function ( data ) {
 				  console.log( data );
 				  var number =1;
 				  $.each(data, function (index, value){
@@ -173,6 +204,19 @@ categories: jekyll update
 					  var myRow = '<tr><td>'+number + '</td><td><a href="javascript:showmd('+ val + ')"> '+ value +'</a></td></tr>';
 					  number = number +1;
 					  $("#marktitle tr:last").after(myRow); 
+
+				  })
+			  });
+
+			  $.getJSON("/cgi-bin/jsonlist/posted" , function ( data ) {
+				  console.log( data );
+				  var number =1;
+				  $.each(data, function (index, value){
+					  console.log(value);
+					  val = "'" + value + "'"
+					  var myRow = '<tr><td>'+number + '</td><td><a href="javascript:showmdposted('+ val + ')"> '+ value +'</a></td></tr>';
+					  number = number +1;
+					  $("#markedtitle tr:last").after(myRow); 
 
 				  })
 			  });
