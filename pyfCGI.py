@@ -6,7 +6,7 @@ import os
 import hashlib
 import git 
 import datetime
-
+import setting
 web.config.debug = False
 urls = (
         "/login/panel", "ClassLoginPanel",
@@ -17,7 +17,8 @@ urls = (
         "/getmd/(.+)" , "ClassMD",
         "/getmdposted/(.+)", "ClassMDP",
         "/submit" , "ClassSubmit",
-        "/raise" , "ClassRaise"
+        "/raise" , "ClassRaise",
+        "/update" , "ClassServerUpdate"
 )
 app = web.application(urls, globals())
 session = web.session.Session(app,web.session.DiskStore('../nsessions'))
@@ -32,6 +33,12 @@ class ClassRaise:
             print(session.loggin)
             return render.redit()
 
+class ClassServerUpdate:
+    def GET(self):
+        app.stop()
+
+
+
 class ClassLogin:
     def POST(self):
         form = web.input()
@@ -43,7 +50,7 @@ class ClassLogin:
             with open( pathuser ,'r' ) as f:
                 fline = f.readline()
                 if fline.replace('\n' , '')  == hashsha.hexdigest():
-                    session.loggin = True      
+                    session.loggin = True    
 
 class ClassLoginPanel:
     def GET(self):
@@ -134,7 +141,7 @@ class ClassLoad:
             g = git.cmd.Git(blogpath)
             g.pull()
         else:
-            git.Git().clone("https://github.com/0mu-Project/blog.git")
+            git.Git().clone(setting.gitpath)
         
 
 class ClassJson:
