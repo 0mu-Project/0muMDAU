@@ -142,14 +142,17 @@ categories: jekyll update
 
 		  <script>
 			   function showmdposted(url) {
-				   alert(url);
 				   $.ajax({
 				   
 					   type : "POST",
 					   url : "/cgi-bin/getmdposted/" + url ,
 					   dataType: "text",
 					   success: function(data) {
+						   var title = url.split(".",1);
+						   var titles = title.toString();
+						   var titled = titles.substr(11);
 						   $("textarea.content").data('markdown').setContent(data);
+						   $("#fc-inp").val(titled);
 					   }
 
 				   });
@@ -158,14 +161,17 @@ categories: jekyll update
 		 </script>
 		  <script>
 			   function showmd(url) {
-				   alert(url);
 				   $.ajax({
 				   
 					   type : "POST",
 					   url : "/cgi-bin/getmd/" + url ,
 					   dataType: "text",
 					   success: function(data) {
+						   var title = url.split(".",1);
+						   var titles = title.toString();
+						   var titled = titles.substr(11);
 						   $("textarea.content").data('markdown').setContent(data);
+						   $("#fc-inp").val(titled);
 					   }
 
 				   });
@@ -185,6 +191,7 @@ categories: jekyll update
 						  if (data == "login")
 						  {
 							  $("#load").show();
+							  $("#fc-inp").val("");
 						  }
 						  else
 						  {
