@@ -17,7 +17,7 @@ urls = (
         "/getmd/(.+)" , "ClassMD",
         "/getmdposted/(.+)", "ClassMDP",
         "/submit" , "ClassSubmit",
-        "/raise" , "ClassRaise",
+        "/edit" , "ClassEdit",
         "/update" , "ClassServerUpdate"
 )
 app = web.application(urls, globals())
@@ -27,7 +27,7 @@ render = render_jinja(
         'templates',
         encoding='utf-8',
         )
-class ClassRaise:
+class ClassEdit:
     def GET(self):
         if session.get("loggin") is not None:
             print(session.loggin)
@@ -57,7 +57,7 @@ class ClassLoginPanel:
         if session.get("loggin") is not None:
             print("data1")
             print(session.get('loggin'))
-            return render.redit()
+            raise web.seeother('/edit')
         else:
             print("d2")
             print(session.get('loggin'))
