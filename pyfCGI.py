@@ -105,13 +105,13 @@ class ClassSubmit:
 
 class ClassMD:
     def POST(self,name):
-        f = open('./_posts/'+ name)
+        f = open('_posts/'+ name)
         
         return f.read()
 
 class ClassMDP:
     def POST(self,name):
-        f = open('./blog/_posts/'+ name)
+        f = open('blog/_posts/'+ name)
         
         return f.read()
 class ClassSave:
@@ -147,9 +147,9 @@ class ClassLoad:
 class ClassJson:
     def GET(self,name):
         if name == "posts" :
-            postpath = "./_posts"
+            postpath = "_posts"
         else:
-            postpath = "./blog/_posts"
+            postpath = "blog/_posts"
 
         if os.path.exists(postpath) == True:
             directory = os.path.expanduser(postpath)
