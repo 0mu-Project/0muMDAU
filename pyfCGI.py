@@ -161,10 +161,8 @@ class ClassJson:
                     data.insert(i,f)
                     import json
                     web.header('Content-Type', 'application/json')
-                    return json.dumps(data,separators=( ',' , ':'))
-                else:
-                    data1 = "False"
-                    
+            return json.dumps(data,separators=( ',' , ':'))
+        
         else:
             os.makedirs(postpath)
 
